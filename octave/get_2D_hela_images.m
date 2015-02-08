@@ -1,9 +1,6 @@
-function data = get_2D_hela_features()
-% GET_2D_HELA_FEATURES Loads The SLF4 features used in the ISMB and 
-% Bioinformatics papers below.
-%
-% This function does not download the original CSV file. It uses an
-% included mat file to allow compatibility between Matlab and Octave.
+function get_2D_hela_images()
+% GET_2D_HELA_IMAGES Retrieve tarball of 2D HeLa images from Carnegie
+% Mellon University
 %
 % Fluorescence microscope images of HeLa cells using ten different labels
 %
@@ -37,7 +34,7 @@ function data = get_2D_hela_features()
 % classification of fluorescence microscope images for location
 % proteomics. BMC Bioinformatics 5:78.
 %
-% See also GET_2D_HELA_IMAGES
+% See also GET_2D_HELA_FEATURES
 
 % Copyright (C) 2015 Ivan E. Cao-Berg
 %
@@ -56,21 +53,29 @@ function data = get_2D_hela_features()
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 % 02110-1301, USA.
 %
-% For additional information visit http://github.com/icaoberg or
+% For additional information visit http://github.com/icaoberg or 
 % https://bitbucket.org/icaoberg
 
-disp( 'Retrieving the 2D Hela SLF16 feature set' );
+disp( ['Retrieving the 2D Hela image dataset ' ...
+    'from Carnegie Mellon University'] );
 disp( 'Copyright (C) Murphy Lab' );
+disp( 'Department of Computational Biology' );
 disp( 'Carnegie Mellon University' );
 
-try
-    filename = [ pwd filesep 'data' ...
-        filesep 'HeLa10Class2DFeatures19990526.mat' ];
-    load( filename );
-    return
-catch err
-    disp( ['Unable to load filename: ' filename ] );
-    data = [];
-    getReport( err )
+web_address = 'http://murphylab.web.cmu.edu/data/';
+filename = 'HeLa10Class2DImages_16bit_scaled.tgz';
+url = [ web_address filename ];
+
+if ~exist([ pwd filesep filename ])
+    disp([ 'Downloading ' url ]);
+    urlwrite( url, filename );
 end
+
+filename = [pwd filesep filename];
+disp( 'Untarring file with Matlab. Might be slow, be patient.' );
+
+if ~exist([pwd filesep 'data'])
+    mkdir([pwd filesep 'data']);
+end
+untar( filename, [ pwd filesep 'data' filesep 'images'] );
 end

@@ -1,1 +1,5 @@
 *.mat
+data/images
+*.mat
+*.csv
+*.tgz
